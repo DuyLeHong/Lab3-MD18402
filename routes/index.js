@@ -1,10 +1,15 @@
 var express = require('express');
+const { default: mongoose } = require('mongoose');
 var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'MD18402' });
 });
+
+router.post('/add_user', function(req, res, next) {
+  
+})
 
 router.get('/home', function(req, res, next) {
   res.render('home', { data: 'MD18402', point: 10 });
@@ -23,8 +28,36 @@ router.get('/chitietsp', function(req, res, next) {
     { "id": "5", "title": "Interstellar", "releaseYear": "2014" }
   ]
 }`
-  //res.send(jsonData)
-  res.render('chitietsp');
+  res.send(jsonData)
+  //res.render('chitietsp');
 });
+
+// ket noi mongoDB
+const uri = 'mongodb+srv://admin4:2A3ilJ0as7EXqsnY@cluster0.0n8qgpd.mongodb.net/md18402'
+
+const carModel = require('../carModel')
+
+router.get('/car', async function(req, res, next) {
+  await mongoose.connect(uri)
+
+  let cars = await carModel.find()
+
+  res.send(cars)
+});
+
+router.post('/add_car', async function(req, res, next) {
+  await mongoose.connect(uri)
+
+  let car = req.body
+  //console.log(car) 
+
+  let kq = await carModel.create(car)
+
+  //let cars = await carModel.find()
+
+  res.send(kq)
+});
+
+
 
 module.exports = router;
